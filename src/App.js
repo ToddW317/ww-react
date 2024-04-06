@@ -20,7 +20,7 @@ function App() {
           <Route path="/credit-debt" element={<CreditDebt />} />
         </Routes>
       </Router>
-    </GlobalStateProvider>d
+    </GlobalStateProvider>
   );
 }
 
