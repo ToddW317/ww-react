@@ -7,6 +7,7 @@ import Income from './Routes/Income';
 import Navbar from './components/Navbar';
 import Savings from './Routes/Savings';
 import CreditDebt from './Routes/CreditDebt';
+import BudgetperPaycheck from './Routes/BudgetperPaycheck';
 import { GlobalStateProvider } from './context/GlobalStateContext';
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/income" element={<Income />} />
           <Route path="/savings" element={<Savings />} />
           <Route path="/credit-debt" element={<CreditDebt />} />
+          <Route path="/budget-per-paycheck" element={<BudgetperPaycheck />} />
         </Routes>
       </Router>
     </GlobalStateProvider>

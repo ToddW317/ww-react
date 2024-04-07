@@ -7,6 +7,7 @@ const initialState = {
   monthlyBudget: {
     expenses: [],
     income: [],
+    categories: [],
   },
   savings: {},
   creditDebt: [],
@@ -46,6 +47,22 @@ const globalStateReducer = (state, action) => {
           income: state.monthlyBudget.income.filter(income => income.id !== action.payload),
         },
       };
+      case 'ADD_CATEGORY':
+        return {
+          ...state,
+          monthlyBudget: {
+            ...state.monthlyBudget,
+            categories: [...state.monthlyBudget.categories, action.payload],
+          },
+        };
+      case 'REMOVE_CATEGORY':
+        return {
+          ...state,
+          monthlyBudget: {
+            ...state.monthlyBudget,
+            categories: state.monthlyBudget.categories.filter(category => category.id !== action.payload),
+          },
+        };
     // Include other actions as necessary
     default:
       return state;
