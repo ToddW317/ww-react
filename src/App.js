@@ -4,14 +4,17 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './Routes/HomePage';
 import MonthlyBudget from './Routes/MonthlyBudget';
 import Income from './Routes/Income';
+import Navbar from './components/Navbar';
 import Savings from './Routes/Savings';
 import CreditDebt from './Routes/CreditDebt';
 import { GlobalStateProvider } from './context/GlobalStateContext';
+import './App.css';
 
 function App() {
   return (
     <GlobalStateProvider>
       <Router>
+      <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/monthly-budget" element={<MonthlyBudget />} />

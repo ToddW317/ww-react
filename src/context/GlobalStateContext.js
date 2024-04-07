@@ -1,37 +1,73 @@
-// In /src/context/GlobalStateContext.js
 import React, { createContext, useContext, useReducer } from 'react';
 
-// Define the context
 const GlobalStateContext = createContext();
 
-// Initial state
 const initialState = {
-  user: {}, // User information
-  monthlyBudget: [], // Monthly budget details
-  income: [], // Income details
-  savings: {}, // Savings goals and progress
-  creditDebt: [], // Credit card debts
+  user: {},
+  monthlyBudget: {
+    expenses: [],
+    income: [],
+  },
+  savings: {},
+  creditDebt: [],
 };
 
-// Reducer function to handle state updates
 const globalStateReducer = (state, action) => {
   switch (action.type) {
-    // Define cases to handle different actions
+    case 'ADD_EXPENSE':
+      return {
+        ...state,
+        monthlyBudget: {
+          ...state.monthlyBudget,
+          expenses: [...state.monthlyBudget.expenses, action.payload],
+        },
+      };
+    case 'REMOVE_EXPENSE':
+      return {
+        ...state,
+        monthlyBudget: {
+          ...state.monthlyBudget,
+          expenses: state.monthlyBudget.expenses.filter(expense => expense.id !== action.payload),
+        },
+      };
+    case 'ADD_INCOME':
+      return {
+        ...state,
+        monthlyBudget: {
+          ...state.monthlyBudget,
+          income: [...state.monthlyBudget.income, action.payload],
+        },
+      };
+    case 'REMOVE_INCOME':
+      return {
+        ...state,
+        monthlyBudget: {
+          ...state.monthlyBudget,
+          income: state.monthlyBudget.income.filter(income => income.id !== action.payload),
+        },
+      };
+    // Include other actions as necessary
     default:
       return state;
   }
 };
 
-// Context Provider component
 export const GlobalStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalStateReducer, initialState);
 
+  // Methods to update the state
+  const addExpense = expense => dispatch({ type: 'ADD_EXPENSE', payload: expense });
+  const removeExpense = expenseId => dispatch({ type: 'REMOVE_EXPENSE', payload: expenseId });
+  const addIncome = income => dispatch({ type: 'ADD_INCOME', payload: income });
+  const removeIncome = incomeId => dispatch({ type: 'REMOVE_INCOME', payload: incomeId });
+
+  // Add more methods as necessary
+
   return (
-    <GlobalStateContext.Provider value={{ state, dispatch }}>
+    <GlobalStateContext.Provider value={{ state, addExpense, removeExpense, addIncome, removeIncome }}>
       {children}
     </GlobalStateContext.Provider>
   );
 };
 
-// Custom hook for using global state context
 export const useGlobalState = () => useContext(GlobalStateContext);

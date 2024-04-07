@@ -1,0 +1,87 @@
+.savings-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .savings-container h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .savings-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .savings-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .savings-list form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .savings-list input[type="number"] {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .savings-list button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .savings-list button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Form to add new savings goal */
+  .add-goal-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .add-goal-form input[type="text"],
+  .add-goal-form input[type="number"] {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .add-goal-form button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-goal-form button:hover {
+    background-color: #218838;
+  }
+  
