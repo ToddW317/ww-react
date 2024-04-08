@@ -9,7 +9,6 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
         <li><Link to="/">Home</Link></li>
         <li><Link to="/monthly-budget">Monthly Budget</Link></li>
         <li><Link to="/savings">Savings</Link></li>
-        <li><Link to="/income">Income</Link></li>
         <li><Link to="/credit-debt">Credit Snowball</Link></li>
         <li><Link to="/budget-per-paycheck">Budget/Paycheck</Link></li>
         {/* Add more links as needed */}

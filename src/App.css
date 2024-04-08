@@ -134,3 +134,67 @@
   width: 30%; /* Adjusts width for the amount column */
   text-align: center; /* Aligns amount texts to the right for better readability */
 }
+
+
+/* IncomesList specific styles */
+.incomes-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.incomes-list th, .incomes-list td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+.incomes-list th {
+  background-color: #e8f4e8; /* Slightly different shade for distinction */
+  color: #336633; /* Darker green text for headers */
+  font-weight: bold;
+}
+
+.incomes-list tr:hover {
+  background-color: #f0f0f0;
+}
+
+.incomes-list td:first-child {
+  width: 20%;
+}
+
+.incomes-list td:nth-child(2) {
+  width: 50%;
+}
+
+.incomes-list td:last-child {
+  width: 30%;
+  text-align: right; /* Ensuring amounts are right-aligned for clarity */
+  color: #2e8b57; /* Green text for amounts to indicate income */
+}
+
+/* BPPContainer.css */
+.bpp-container {
+  display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
+  gap: 20px; /* Adds space between intervals */
+}
+
+.interval {
+  border: 1px solid #ddd; /* Adds a subtle border */
+  border-radius: 8px; /* Rounds the corners */
+  padding: 20px; /* Adds some spacing inside each interval */
+  background-color: #f9f9f9; /* Light background for distinction */
+}
+
+/* Styles for desktop */
+@media (min-width: 768px) { /* Adjust breakpoint as needed */
+  .bpp-container {
+    flex-direction: row; /* Side by side on desktop */
+  }
+  .interval {
+    flex: 1; /* Makes intervals take up equal width */
+    max-width: calc(50% - 10px); /* Adjust based on the gap */
+  }
+}
+

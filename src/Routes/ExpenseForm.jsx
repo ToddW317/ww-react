@@ -2,30 +2,45 @@ import React, { useState } from 'react';
 import { useGlobalState } from '../context/GlobalStateContext';
 
 const ExpenseForm = () => {
-    const { addExpense } = useGlobalState();
+    const { state, dispatch } = useGlobalState();
     const [expenseName, setExpenseName] = useState('');
     const [amount, setAmount] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
     const [recurringFrequency, setRecurringFrequency] = useState('');
     const [date, setDate] = useState('');
+    const [category, setCategory] = useState('');
+
+    const handleAddCategory = () => {
+        const newCategoryName = prompt("Enter the name of the new category:");
+        if (newCategoryName && !state.monthlyBudget.categories.find(cat => cat.name === newCategoryName)) {
+            dispatch({ type: 'ADD_CATEGORY', payload: { name: newCategoryName } });
+            setCategory(newCategoryName); // Automatically select the newly created category
+        } else if (newCategoryName) {
+            alert("Category already exists or invalid name.");
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addExpense({
-            name: expenseName, 
-            amount, 
-            isRecurring, 
-            recurringFrequency, 
-            date
-        });
+        const newExpense = {
+            id: Date.now(),
+            name: expenseName,
+            amount: parseFloat(amount),
+            isRecurring,
+            recurringFrequency,
+            date,
+            category,
+        };
+        dispatch({ type: 'ADD_EXPENSE', payload: newExpense });
         
-    // Clear form fields
-    setExpenseName('');
-    setAmount('');
-    setIsRecurring(false);
-    setRecurringFrequency('');
-    setDate('');
-};
+        // Clear form fields
+        setExpenseName('');
+        setAmount('');
+        setIsRecurring(false);
+        setRecurringFrequency('');
+        setDate('');
+        setCategory('');
+    };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -54,6 +69,25 @@ const ExpenseForm = () => {
             <label>
                 Date:
                 <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            </label>
+            <label>
+                Category:
+                <select
+                    value={category}
+                    onChange={(e) => {
+                        if (e.target.value === "addNew") {
+                            handleAddCategory();
+                        } else {
+                            setCategory(e.target.value);
+                        }
+                    }}
+                >
+                    <option value="">Select a Category</option>
+                    {state.monthlyBudget.categories.map((cat, index) => (
+                        <option key={index} value={cat.name}>{cat.name}</option>
+                    ))}
+                    <option value="addNew">Add New Category...</option>
+                </select>
             </label>
             <button type="submit">Add Expense</button>
         </form>
