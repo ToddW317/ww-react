@@ -45,12 +45,10 @@ const ExpenseForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                Expense Name:
-                <input type="text" value={expenseName} onChange={(e) => setExpenseName(e.target.value)} />
+                <input type="text" value={expenseName} onChange={(e) => setExpenseName(e.target.value)} placeholder='Expense Name' />
             </label>
             <label>
-                Amount:
-                <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder='Amount' />
             </label>
             <label>
                 Recurring:

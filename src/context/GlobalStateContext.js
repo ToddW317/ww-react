@@ -16,6 +16,14 @@ const initialState = {
 const globalStateReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_EXPENSE':
+      if (action.payload.category === 'Credit Card') {
+        const cardToUpdate = state.creditDebt.find(card => card.name === action.payload.name);
+        if (cardToUpdate) {
+          const updatedBalance = cardToUpdate.balance + action.payload.amount; // Adding expense to the balance
+          return globalStateReducer(state, { type: 'UPDATE_CREDIT_DEBT', payload: { ...cardToUpdate, balance: updatedBalance } });
+        }
+      }
+      // For non-credit card expenses, just add them normally
       return {
         ...state,
         monthlyBudget: {
@@ -63,6 +71,30 @@ const globalStateReducer = (state, action) => {
             categories: state.monthlyBudget.categories.filter(category => category.id !== action.payload),
           },
         };
+      case 'UPDATE_EXPENSES':
+        return {
+          ...state,
+          monthlyBudget: {
+            ...state.monthlyBudget,
+            expenses: action.payload,
+          },
+        };
+        case 'ADD_CREDIT_DEBT': // Action to add a new credit card debt
+        return {
+          ...state,
+          creditDebt: [...state.creditDebt, action.payload],
+        };
+      case 'UPDATE_CREDIT_DEBT': // Action to update an existing credit card's balance
+        const updatedCreditDebt = state.creditDebt.map(debt => {
+          if (debt.id === action.payload.id) {
+            return { ...debt, balance: action.payload.balance };
+          }
+          return debt;
+        });
+        return {
+          ...state,
+          creditDebt: updatedCreditDebt,
+        };
     // Include other actions as necessary
     default:
       return state;
@@ -73,7 +105,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [state, dispatch] = useReducer(globalStateReducer, initialState);
 
   // Methods to update the state
-  const addExpense = expense => dispatch({ type: 'ADD_EXPENSE', payload: expense });
+  const addExpense = expense => dispatch({ type: 'ADD_EXPENSE', payload: expense, paid: false });
   const removeExpense = expenseId => dispatch({ type: 'REMOVE_EXPENSE', payload: expenseId });
   const addIncome = incomes => dispatch({ type: 'ADD_INCOME', payload: incomes });
   const removeIncome = incomesId => dispatch({ type: 'REMOVE_INCOME', payload: incomesId });
