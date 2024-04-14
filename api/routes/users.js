@@ -1,69 +1,81 @@
 const express = require('express');
 const User = require('../../src/models/User');
-const bcrypt = require('bcrypt');
+const Budget = require('../../src/models/Budget');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 // User registration
 router.post('/register', async (req, res) => {
-  console.log("Register endpoint hit with data:", req.body); // Log the incoming request data
   try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ username: req.body.username });
-    if (existingUser) {
+    let user = await User.findOne({ username: req.body.username });
+    if (user) {
       return res.status(400).send({ message: "Username is already taken" });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    let user = new User({
-      ...req.body,
-      password: hashedPassword,
+    user = new User({
+      username: req.body.username,
+      password: req.body.password, // Storing password as plain text (not recommended)
     });
 
     await user.save();
     res.status(201).send({ message: "User created successfully" });
   } catch (error) {
-    console.error("Registration error:", error); // Log any errors
-    res.status(400).send(error);
+    res.status(500).send({ message: "Error registering new user." });
   }
 });
 
 
+
 // User login
 router.post('/login', async (req, res) => {
-  console.log("Login endpoint hit with data:", req.body); // Log the incoming request data
   try {
     const user = await User.findOne({ username: req.body.username });
-    console.log("Found user:", user); // Log the found user
-    if (!user) {
+    if (!user || user.password !== req.body.password) {
       return res.status(400).send({ message: "Invalid credentials" });
     }
 
-    console.log("Comparing", req.body.password, "with hashed", user.password);
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
-    console.log("Password match:", isMatch);
-    
-    if (!isMatch) {
-      return res.status(400).send({ message: "Invalid credentials" });
-    }
-
+    // Assuming you still generate a token for session management
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    // Send back the token and user info (excluding password)
     res.send({ 
       token,
       user: {
         _id: user._id,
         username: user.username,
-        // Add other user fields you might want to send back
       }
     });
   } catch (error) {
-    console.error("Login error:", error); // Log any errors
-    res.status(500).send(error);
+    res.status(500).send({ message: "Error during login." });
   }
 });
 
+// Endpoint to update a budget
+router.patch('/budget/:id', async (req, res) => {
+  const { id } = req.params; // Get the budget ID from the request URL
+  const updates = req.body; // Get the updates from the request body
+
+  try {
+    const budget = await Budget.findById(id);
+
+    if (!budget) {
+      return res.status(404).send({ message: "Budget not found" });
+    }
+
+    // Check if the user making the request owns the budget
+    if (req.user._id.toString() !== budget.user.toString()) {
+      return res.status(403).send({ message: "Not authorized to update this budget" });
+    }
+
+    // Apply updates to the budget
+    for (const key in updates) {
+      budget[key] = updates[key];
+    }
+
+    await budget.save(); // Save the updated budget
+    res.send(budget); // Send back the updated budget document
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 
 module.exports = router;

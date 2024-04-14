@@ -1,12 +1,12 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
-async function testHash() {
-  const password = 'Football2215!';
-  const hashed = await bcrypt.hash(password, 10); // Assuming salt rounds of 10
-  console.log('Hashed password:', hashed);
+const passwordFromUser = "Football2215!";
+const hashedPasswordFromDb = "$2a$10$B2qvr9adicagyCI2.uNC7el653eE602ooKumFrKzod.C2G1sGTVG2";
 
-  const comparisonResult = await bcrypt.compare(password, hashed);
-  console.log('Password matches:', comparisonResult);
-}
-
-testHash();
+bcrypt.compare(passwordFromUser, hashedPasswordFromDb, function(err, result) {
+    if (err) {
+        console.error("Error during comparison:", err);
+        return;
+    }
+    console.log("Direct comparison result within application:", result); // Should log 'true'
+});

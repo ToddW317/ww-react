@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -11,37 +10,34 @@ function Login() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    console.log("Attempting to log in with:", { username, password });
-    try {
-      const response = await axios.post('/api/users/login', {
+    fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         username,
         password,
-      });
-      
-      // Assuming the backend sends back a token and user info
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      // Redirect user to homepage or dashboard after successful login
-      navigate('/'); 
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        console.error("Login failed with error:", error);
-        setLoginError(error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(data => Promise.reject(data));
       }
-    }
+      return response.json();
+    })
+    .then(data => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      // Redirect user to homepage or dashboard after successful login
+      navigate('/');
+    })
+    .catch(error => {
+      console.error("Login failed with error:", error);
+      setLoginError(error.message || 'Login failed');
+    });
   };
+
 
   return (
     <div>
@@ -74,3 +70,10 @@ function Login() {
 }
 
 export default Login;
+
+
+
+
+
+
+

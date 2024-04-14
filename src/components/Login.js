@@ -1,24 +1,40 @@
 import React, { useState } from 'react';
-import axios from '../axios'; // Import the Axios instance
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    
-    try {
-      const response = await axios.post('/users/login', { username, password });
-      console.log(response.data);
-      // On successful login, save the token to localStorage
-      localStorage.setItem('token', response.data.token);
-      alert("Logged in successfully!");
-      // Redirect user or update UI to reflect login
-    } catch (error) {
-      console.error(error.response.data); // Handle error
-      alert(error.response.data.message); // Show error message
-    }
+
+    fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/');
+    })
+    .catch(error => {
+      console.error("Login failed with error:", error);
+      setLoginError(error.message);
+    });
   };
 
   return (
@@ -50,6 +66,14 @@ const Login = () => {
       <button type="submit">Login</button>
     </form>
   );
-};
+  };
 
 export default Login;
+
+
+
+
+
+
+
+

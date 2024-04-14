@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
@@ -10,25 +9,32 @@ function Register() {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    console.log("Attempting to register with:", { username, password });
 
-    try {
-      await axios.post('/api/users/register', {
+    fetch('/api/users/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         username,
         password,
-      });
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(data => Promise.reject(data));
+      }
+      return response.json();
+    })
+    .then(data => {
       // Redirect user to login page after successful registration
       navigate('/login'); 
-    } catch (error) {
-      if (error.response) {
-        // Process error response
-        console.error("Registration failed with error:", error);
-        setRegisterError(error.response.data.message);
-      } else {
-        // General error handling
-        console.error('Registration error:', error);
-      }
-    }
+    })
+    .catch(error => {
+      // Process error response
+      console.error("Registration failed with error:", error);
+      setRegisterError(error.message || 'Registration failed');
+    });
   };
 
   return (
