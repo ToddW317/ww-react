@@ -1,27 +1,55 @@
+/* navbar.css */
+
 nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: space-around; /* Adjust as needed */
-    background-color: #333; /* Dark background */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #111;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  nav ul {
+    float: none;
+    width: 100%;
   }
-  
-  nav ul li {
-    margin: 0 10px;
-  }
-  
-  nav ul li a, nav ul li button {
-    text-decoration: none;
-    color: white; /* White text */
-    padding: 10px;
+
+  nav li {
+    float: none;
     display: block;
+    width: 100%;
+    text-align: left; /* Align text for better mobile readability */
   }
-  
-  nav ul li button {
-    background: none;
+
+  /* Toggle button style (hamburger menu) */
+  .toggle-button {
+    display: block;
+    background-color: #333;
+    color: white;
     border: none;
-    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
   }
-  
-  /* Add more styles as needed */
-  
+
+  .hidden {
+    display: none;
+  }
+}
